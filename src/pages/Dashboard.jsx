@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { Droplets, Thermometer, FlaskConical, TestTube, Ruler, Bot } from "lucide-react";
 import {
   AreaChart, Area, CartesianGrid, XAxis, YAxis,
   Tooltip, ResponsiveContainer, Legend,
 } from "recharts";
 import { latestMetrics, trends, alerts } from "../data/ponds";
 
-const metricIcons = { do: "💧", temp: "🌡️", ph: "⚗️", nh3: "🧪", waterLevel: "📏", robot: "🤖" };
+const metricIcons = { do: Droplets, temp: Thermometer, ph: FlaskConical, nh3: TestTube, waterLevel: Ruler, robot: Bot };
 const metricIconCls = { do: "do", temp: "temp", ph: "ph", nh3: "nh3", waterLevel: "water", robot: "robot" };
 const statusTag = (s) => s === "good" ? "status-green" : s === "warning" ? "status-yellow" : "status-red";
 const statusText = (s) => s === "good" ? "正常" : s === "warning" ? "关注" : "异常";
@@ -29,21 +29,26 @@ export default function Dashboard() {
         <h1 className="page-title">鱼塘数据看板</h1>
         <p className="page-desc">聚焦溶氧、水温、pH、氨氮、水位与机器人状态，快速掌握当前鱼塘运行全貌。</p>
       </header>
-      <section className="summary-grid">
-        {latestMetrics.map((item) => (
-          <div key={item.key} className={`summary-card status-${item.status}`}>
-            <div className={`summary-icon ${metricIconCls[item.key]}`}>{metricIcons[item.key]}</div>
-            <div className="summary-label">{item.label}</div>
-            <div className="summary-value">
-              {item.value}
-              {item.unit ? <span className="summary-unit">{item.unit}</span> : null}
+      <section className="summary-grid" aria-label="核心指标">
+        {latestMetrics.map((item) => {
+          const Icon = metricIcons[item.key];
+          return (
+            <div key={item.key} className={`summary-card status-${item.status}`}>
+              <div className={`summary-icon ${metricIconCls[item.key]}`} aria-hidden="true">
+                <Icon size={20} strokeWidth={1.8} />
+              </div>
+              <div className="summary-label">{item.label}</div>
+              <div className="summary-value">
+                {item.value}
+                {item.unit ? <span className="summary-unit">{item.unit}</span> : null}
+              </div>
+              <div className="summary-note">
+                <span className={`status-tag ${statusTag(item.status)}`}>{statusText(item.status)}</span>
+                <span>{item.note}</span>
+              </div>
             </div>
-            <div className="summary-note">
-              <span className={`status-tag ${statusTag(item.status)}`}>{statusText(item.status)}</span>
-              <span style={{ marginLeft: 8 }}>{item.note}</span>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </section>
       <section className="section-grid">
         <div className="section-card">
@@ -53,12 +58,12 @@ export default function Dashboard() {
               <AreaChart data={trends}>
                 <defs>
                   <linearGradient id="gradDO" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#2563eb" stopOpacity={0.2} />
-                    <stop offset="95%" stopColor="#2563eb" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#0369a1" stopOpacity={0.15} />
+                    <stop offset="95%" stopColor="#0369a1" stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="gradTemp" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#ea580c" stopOpacity={0.15} />
-                    <stop offset="95%" stopColor="#ea580c" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#c2410c" stopOpacity={0.12} />
+                    <stop offset="95%" stopColor="#c2410c" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
@@ -66,8 +71,8 @@ export default function Dashboard() {
                 <YAxis tick={{ fontSize: 12, fill: "#94a3b8" }} tickMargin={8} axisLine={false} tickLine={false} />
                 <Tooltip content={<CustomTooltip />} />
                 <Legend iconType="circle" wrapperStyle={{ fontSize: 13 }} />
-                <Area type="monotone" dataKey="do" name="溶氧 (mg/L)" stroke="#2563eb" strokeWidth={2.5} fill="url(#gradDO)" dot={false} />
-                <Area type="monotone" dataKey="temp" name="水温 (°C)" stroke="#ea580c" strokeWidth={2.5} fill="url(#gradTemp)" dot={false} />
+                <Area type="monotone" dataKey="do" name="溶氧 (mg/L)" stroke="#0369a1" strokeWidth={2.5} fill="url(#gradDO)" dot={false} />
+                <Area type="monotone" dataKey="temp" name="水温 (°C)" stroke="#c2410c" strokeWidth={2.5} fill="url(#gradTemp)" dot={false} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -91,12 +96,15 @@ export default function Dashboard() {
         <div className="section-card">
           <div className="section-title"><span className="section-title-icon" /> 全部指标</div>
           <ul className="meta-list">
-            {latestMetrics.map((item) => (
-              <li key={item.key} className="meta-chip">
-                <span>{metricIcons[item.key]}</span>
-                <strong>{item.label}</strong> {item.value}{item.unit ? ` ${item.unit}` : ""}
-              </li>
-            ))}
+            {latestMetrics.map((item) => {
+              const Icon = metricIcons[item.key];
+              return (
+                <li key={item.key} className="meta-chip">
+                  <Icon size={14} strokeWidth={1.8} aria-hidden="true" />
+                  <strong>{item.label}</strong> {item.value}{item.unit ? ` ${item.unit}` : ""}
+                </li>
+              );
+            })}
           </ul>
         </div>
         <div className="section-card">

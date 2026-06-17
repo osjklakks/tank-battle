@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { NavLink, Routes, Route, Navigate } from "react-router-dom";
+import { BarChart3, Waves, FileText, Fish } from "lucide-react";
 import Dashboard from "./pages/Dashboard";
 import Twin from "./pages/Twin";
 import Report from "./pages/Report";
@@ -11,9 +12,9 @@ function Topbar() {
     return () => clearInterval(t);
   }, []);
   return (
-    <div className="topbar">
+    <div className="topbar" role="banner">
       <div className="topbar-left">
-        <select className="topbar-pond-select">
+        <select className="topbar-pond-select" aria-label="选择鱼塘">
           <option>东塘 A</option>
           <option>南塘 B</option>
           <option>西塘 C</option>
@@ -21,8 +22,13 @@ function Topbar() {
         </select>
       </div>
       <div className="topbar-right">
-        <div className="topbar-status"><span className="topbar-status-dot" /> 系统在线</div>
-        <div className="topbar-time">{time.toLocaleDateString("zh-CN")} {time.toLocaleTimeString("zh-CN")}</div>
+        <div className="topbar-status" aria-label="系统状态在线">
+          <span className="topbar-status-dot" />
+          系统在线
+        </div>
+        <time className="topbar-time" dateTime={time.toISOString()}>
+          {time.toLocaleDateString("zh-CN")} {time.toLocaleTimeString("zh-CN")}
+        </time>
       </div>
     </div>
   );
@@ -31,23 +37,28 @@ function Topbar() {
 export default function App() {
   return (
     <div className="app">
-      <aside className="sidebar">
+      <aside className="sidebar" role="navigation" aria-label="主导航">
         <div className="brand">
-          <div className="brand-icon">🐟</div>
+          <div className="brand-icon" aria-hidden="true">
+            <Fish size={24} />
+          </div>
           <div>
             <div className="brand-title">智氧兴渔</div>
             <div className="brand-sub">鱼塘智能管理平台</div>
           </div>
         </div>
         <nav className="nav">
-          <NavLink to="/dashboard" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
-            <span className="nav-icon">📊</span> 鱼塘数据
+          <NavLink to="/dashboard" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"} aria-label="鱼塘数据看板">
+            <BarChart3 className="nav-icon" size={20} strokeWidth={1.8} aria-hidden="true" />
+            <span>鱼塘数据</span>
           </NavLink>
-          <NavLink to="/twin" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
-            <span className="nav-icon">🌊</span> 数字孚生
+          <NavLink to="/twin" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"} aria-label="数字孚生看板">
+            <Waves className="nav-icon" size={20} strokeWidth={1.8} aria-hidden="true" />
+            <span>数字孚生</span>
           </NavLink>
-          <NavLink to="/report" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
-            <span className="nav-icon">📋</span> 报告生成
+          <NavLink to="/report" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"} aria-label="报告生成页">
+            <FileText className="nav-icon" size={20} strokeWidth={1.8} aria-hidden="true" />
+            <span>报告生成</span>
           </NavLink>
         </nav>
         <div className="sidebar-footer">

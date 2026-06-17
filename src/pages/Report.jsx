@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ClipboardList, FileCheck } from "lucide-react";
 
 export default function Report() {
   const [pond, setPond] = useState("东塘 A");
@@ -40,51 +41,53 @@ export default function Report() {
       <div className="report-grid">
         <div className="section-card">
           <div className="section-title"><span className="section-title-icon" /> 报告参数</div>
-          <div className="form-grid">
-            <div className="field">
-              <label className="field-label">鱼塘</label>
-              <select className="select" value={pond} onChange={(e) => setPond(e.target.value)}>
-                <option>东塘 A</option>
-                <option>南塘 B</option>
-                <option>西塘 C</option>
-                <option>北塘 D</option>
-              </select>
+          <form onSubmit={(e) => { e.preventDefault(); handleGenerate(); }}>
+            <div className="form-grid">
+              <div className="field">
+                <label className="field-label" htmlFor="report-pond">鱼塘</label>
+                <select id="report-pond" className="select" value={pond} onChange={(e) => setPond(e.target.value)}>
+                  <option>东塘 A</option>
+                  <option>南塘 B</option>
+                  <option>西塘 C</option>
+                  <option>北塘 D</option>
+                </select>
+              </div>
+              <div className="field">
+                <label className="field-label" htmlFor="report-date">日期</label>
+                <input id="report-date" className="input" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+              </div>
+              <div className="field">
+                <label className="field-label" htmlFor="report-range">时间范围</label>
+                <select id="report-range" className="select" value={range} onChange={(e) => setRange(e.target.value)}>
+                  <option value="24h">近 24 小时</option>
+                  <option value="3d">近 3 天</option>
+                  <option value="7d">近 7 天</option>
+                </select>
+              </div>
+              <div className="field">
+                <label className="field-label" htmlFor="report-note">报告用途</label>
+                <input id="report-note" className="input" placeholder="日报 / 周报 / 事件复盘" value={note} onChange={(e) => setNote(e.target.value)} />
+              </div>
             </div>
-            <div className="field">
-              <label className="field-label">日期</label>
-              <input className="input" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+            <div style={{ marginTop: 16 }}>
+              <button type="submit" className="primary-btn" disabled={loading} aria-busy={loading}>
+                {loading ? "生成中..." : "生成报告"}
+              </button>
             </div>
-            <div className="field">
-              <label className="field-label">时间范围</label>
-              <select className="select" value={range} onChange={(e) => setRange(e.target.value)}>
-                <option value="24h">近 24 小时</option>
-                <option value="3d">近 3 天</option>
-                <option value="7d">近 7 天</option>
-              </select>
-            </div>
-            <div className="field">
-              <label className="field-label">报告用途</label>
-              <input className="input" placeholder="日报 / 周报 / 事件复盘" value={note} onChange={(e) => setNote(e.target.value)} />
-            </div>
-          </div>
-          <div style={{ marginTop: 16 }}>
-            <button className="primary-btn" disabled={loading} onClick={handleGenerate}>
-              {loading ? "生成中..." : "生成报告"}
-            </button>
-          </div>
-          <p className="small-note" style={{ marginTop: 12 }}>当前为前端演示模式，生成内容由本地模拟逻辑输出，后续可对接真实数据源。</p>
+          </form>
+          <p className="small-note" style={{ marginTop: 12 }}>当前为前端演示模式，生成内容由本地模拟逻辑输出。</p>
         </div>
         <div className="section-card">
           <div className="section-title"><span className="section-title-icon" /> 报告预览</div>
           {!report ? (
-            <div className="report-placeholder">
-              <div style={{ fontSize: 32, marginBottom: 12 }}>📋</div>
-              尚未生成报告。请在左侧选择参数后点击“生成报告”。
+            <div className="report-placeholder" aria-label="尚未生成报告">
+              <ClipboardList size={32} strokeWidth={1.5} style={{ marginBottom: 12, opacity: 0.4 }} aria-hidden="true" />
+              <div>尚未生成报告。请在左侧选择参数后点击“生成报告”。</div>
             </div>
           ) : (
             <div className="report-summary">
               <div className="report-header">
-                <div className="report-header-icon">📋</div>
+                <div className="report-header-icon" aria-hidden="true"><FileCheck size={20} strokeWidth={1.8} /></div>
                 <div className="report-header-text">
                   <h3>{report.pond} 巡塘报告</h3>
                   <p>{report.date} · {report.range === "24h" ? "近 24 小时" : report.range === "3d" ? "近 3 天" : "近 7 天"}</p>
@@ -101,7 +104,7 @@ export default function Report() {
                 <div className="report-section-label">输出内容</div>
                 <ul className="meta-list">
                   {report.actions.map((item) => (
-                    <li key={item} className="meta-chip">✅ {item}</li>
+                    <li key={item} className="meta-chip"><FileCheck size={14} strokeWidth={1.8} aria-hidden="true" /> {item}</li>
                   ))}
                 </ul>
                 {report.note ? (
