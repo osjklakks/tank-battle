@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { NavLink, Routes, Route, Navigate } from "react-router-dom";
 import { BarChart3, Waves, FileText, Fish } from "lucide-react";
+import Cover from "./pages/Cover";
 import Dashboard from "./pages/Dashboard";
 import Twin from "./pages/Twin";
 import Report from "./pages/Report";
@@ -34,7 +35,7 @@ function Topbar() {
   );
 }
 
-export default function App() {
+function AppLayout() {
   return (
     <div className="app">
       <aside className="sidebar" role="navigation" aria-label="主导航">
@@ -78,5 +79,14 @@ export default function App() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/cover" element={<Cover />} />
+      <Route path="/*" element={<AppLayout />} />
+    </Routes>
   );
 }
