@@ -16,7 +16,7 @@ export default function Twin() {
         <p className="page-desc">以空间可视化方式呈现鱼塘溶氧分布、机器人巡航轨迹与低氧区标注，直觉式理解“哪里需要补氧”。</p>
       </header>
       <div className="twin-grid">
-        <div className="section-card canvas-card">
+        <div className="section-card canvas-card stagger-in" style={{ animationDelay: "0ms" }}>
           <div className="section-title"><span className="section-title-icon" /> 鱼塘空间模型</div>
           <div className="canvas" role="img" aria-label="鱼塘数字孚生模型">
             <div className="canvas-grid" />
@@ -38,32 +38,32 @@ export default function Twin() {
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <div className="twin-mini">
-            <div className="summary-card status-warning">
+            <div className="summary-card status-warning stagger-in" style={{ animationDelay: "80ms" }}>
               <div className="summary-icon do" aria-hidden="true"><Droplets size={20} strokeWidth={1.8} /></div>
               <div className="summary-label">溶氧</div>
               <div className="summary-value">{doMetric.value}<span className="summary-unit">{doMetric.unit}</span></div>
               <div className="summary-note"><span className="status-tag status-yellow">关注</span></div>
             </div>
-            <div className="summary-card status-good">
+            <div className="summary-card status-good stagger-in" style={{ animationDelay: "140ms" }}>
               <div className="summary-icon temp" aria-hidden="true"><Thermometer size={20} strokeWidth={1.8} /></div>
               <div className="summary-label">水温</div>
               <div className="summary-value">{tempMetric.value}<span className="summary-unit">{tempMetric.unit}</span></div>
               <div className="summary-note"><span className="status-tag status-green">正常</span></div>
             </div>
-            <div className="summary-card status-good">
+            <div className="summary-card status-good stagger-in" style={{ animationDelay: "200ms" }}>
               <div className="summary-icon water" aria-hidden="true"><Ruler size={20} strokeWidth={1.8} /></div>
               <div className="summary-label">水位</div>
               <div className="summary-value">{waterMetric.value}<span className="summary-unit">{waterMetric.unit}</span></div>
               <div className="summary-note"><span className="status-tag status-green">正常</span></div>
             </div>
-            <div className="summary-card status-good">
+            <div className="summary-card status-good stagger-in" style={{ animationDelay: "260ms" }}>
               <div className="summary-icon robot" aria-hidden="true"><Bot size={20} strokeWidth={1.8} /></div>
               <div className="summary-label">机器人状态</div>
               <div className="summary-value" style={{ fontSize: 20 }}>{robotMetric.value}</div>
               <div className="summary-note"><span className="status-tag status-green">运行中</span></div>
             </div>
           </div>
-          <div className="section-card">
+          <div className="section-card stagger-in" style={{ animationDelay: "320ms" }}>
             <div className="section-title"><span className="section-title-icon" /> 孚生事件流</div>
             <ul className="alert-list">
               {alerts.slice(0, 3).map(function(item) {

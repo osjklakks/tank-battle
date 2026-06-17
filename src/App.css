@@ -1163,3 +1163,142 @@ button, input, select, textarea {
   .cover-stat-divider { display: none; }
   .cover-stat { min-width: 80px; }
 }
+
+
+/* ===================================================================
+   Enhanced: Stagger entrance animation
+   =================================================================== */
+@keyframes staggerSlideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.stagger-in {
+  animation: staggerSlideIn 0.4s var(--ease-out) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stagger-in { animation: none; }
+}
+
+/* ===================================================================
+   Enhanced: Chart tooltip
+   =================================================================== */
+.chart-tooltip {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  box-shadow: var(--shadow-lg);
+  font-size: var(--text-sm);
+  min-width: 160px;
+}
+
+.chart-tooltip-title {
+  font-weight: var(--weight-bold);
+  margin-bottom: 8px;
+  color: var(--color-text-primary);
+  font-size: var(--text-base);
+}
+
+.chart-tooltip-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+  font-size: var(--text-sm);
+}
+
+.chart-tooltip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ===================================================================
+   Enhanced: Status tag with icon alignment
+   =================================================================== */
+.status-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.status-tag svg {
+  flex-shrink: 0;
+}
+
+/* ===================================================================
+   Enhanced: Active nav link glow
+   =================================================================== */
+.nav-link.active {
+  box-shadow: inset 0 0 0 1px rgba(56, 189, 248, 0.12);
+}
+
+/* ===================================================================
+   Enhanced: Card hover micro-interaction (scale hint)
+   =================================================================== */
+.summary-card:active {
+  transform: scale(0.985);
+  transition: transform 80ms var(--ease-out);
+}
+
+/* ===================================================================
+   Enhanced: Status dot pulse refinement
+   =================================================================== */
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.55; transform: scale(0.85); }
+}
+
+.topbar-status-dot {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* ===================================================================
+   Enhanced: Sidebar brand icon subtle glow
+   =================================================================== */
+.brand-icon {
+  box-shadow: 0 4px 14px rgba(3, 105, 161, 0.35), 0 0 0 1px rgba(56, 189, 248, 0.15);
+}
+
+/* ===================================================================
+   Enhanced: Alert item left accent
+   =================================================================== */
+.alert-item {
+  border-left: 3px solid transparent;
+  transition: border-color var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out);
+}
+
+.alert-item:has(.status-green) { border-left-color: var(--color-success); }
+.alert-item:has(.status-yellow) { border-left-color: var(--color-warning); }
+.alert-item:has(.status-red) { border-left-color: var(--color-danger); }
+
+/* ===================================================================
+   Enhanced: Report placeholder icon fade
+   =================================================================== */
+.report-placeholder svg {
+  opacity: 0.35;
+}
+
+/* ===================================================================
+   Enhanced: Twin canvas inner shadow for depth
+   =================================================================== */
+.canvas::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  box-shadow: inset 0 2px 20px rgba(0,0,0,0.06);
+  pointer-events: none;
+}
+
+/* ===================================================================
+   Enhanced: Print-friendly (hide sidebar, topbar)
+   =================================================================== */
+@media print {
+  .sidebar, .topbar { display: none; }
+  .main-inner { padding: 0; }
+  .summary-card, .section-card { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+}
