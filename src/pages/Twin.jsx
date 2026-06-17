@@ -1,12 +1,14 @@
 import { Droplets, Thermometer, Ruler, Bot } from "lucide-react";
-import { latestMetrics, alerts } from "../data/ponds";
+import { usePond } from "../data/PondContext";
 
 export default function Twin() {
-  const doMetric = latestMetrics.find((m) => m.key === "do");
-  const tempMetric = latestMetrics.find((m) => m.key === "temp");
-  const waterMetric = latestMetrics.find((m) => m.key === "waterLevel");
-  const robotMetric = latestMetrics.find((m) => m.key === "robot");
-
+  var { data } = usePond();
+  var latestMetrics = data.metrics;
+  var alerts = data.alerts;
+  var doMetric = latestMetrics.find(function(m) { return m.key === "do"; });
+  var tempMetric = latestMetrics.find(function(m) { return m.key === "temp"; });
+  var waterMetric = latestMetrics.find(function(m) { return m.key === "waterLevel"; });
+  var robotMetric = latestMetrics.find(function(m) { return m.key === "robot"; });
   return (
     <div>
       <header className="page-header">
@@ -16,7 +18,7 @@ export default function Twin() {
       <div className="twin-grid">
         <div className="section-card canvas-card">
           <div className="section-title"><span className="section-title-icon" /> 鱼塘空间模型</div>
-          <div className="canvas" role="img" aria-label="鱼塘数字孚生模型，显示低氧区域和机器人位置">
+          <div className="canvas" role="img" aria-label="鱼塘数字孚生模型">
             <div className="canvas-grid" />
             <div className="pond">
               <div className="robot-trail" />
@@ -64,14 +66,16 @@ export default function Twin() {
           <div className="section-card">
             <div className="section-title"><span className="section-title-icon" /> 孚生事件流</div>
             <ul className="alert-list">
-              {alerts.slice(0, 3).map((item) => (
-                <li key={item.id} className="alert-item">
-                  <div>
-                    <div className="alert-name">{item.pond}</div>
-                    <div className="alert-meta">{item.message} · {item.time}</div>
-                  </div>
-                </li>
-              ))}
+              {alerts.slice(0, 3).map(function(item) {
+                return (
+                  <li key={item.id} className="alert-item">
+                    <div>
+                      <div className="alert-name">{item.pond}</div>
+                      <div className="alert-meta">{item.message} · {item.time}</div>
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </div>

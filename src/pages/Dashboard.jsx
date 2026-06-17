@@ -3,38 +3,43 @@ import {
   AreaChart, Area, CartesianGrid, XAxis, YAxis,
   Tooltip, ResponsiveContainer, Legend,
 } from "recharts";
-import { latestMetrics, trends, alerts } from "../data/ponds";
+import { usePond } from "../data/PondContext";
 
-const metricIcons = { do: Droplets, temp: Thermometer, ph: FlaskConical, nh3: TestTube, waterLevel: Ruler, robot: Bot };
-const metricIconCls = { do: "do", temp: "temp", ph: "ph", nh3: "nh3", waterLevel: "water", robot: "robot" };
-const statusTag = (s) => s === "good" ? "status-green" : s === "warning" ? "status-yellow" : "status-red";
-const statusText = (s) => s === "good" ? "正常" : s === "warning" ? "关注" : "异常";
+var metricIcons = { do: Droplets, temp: Thermometer, ph: FlaskConical, nh3: TestTube, waterLevel: Ruler, robot: Bot };
+var metricIconCls = { do: "do", temp: "temp", ph: "ph", nh3: "nh3", waterLevel: "water", robot: "robot" };
+var statusTag = function(s) { return s === "good" ? "status-green" : s === "warning" ? "status-yellow" : "status-red"; };
+var statusText = function(s) { return s === "good" ? "正常" : s === "warning" ? "关注" : "异常"; };
 
-const CustomTooltip = ({ active, payload, label }) => {
+var CustomTooltip = function(props) {
+  var active = props.active, payload = props.payload, label = props.label;
   if (!active || !payload?.length) return null;
   return (
     <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, padding: "10px 14px", boxShadow: "0 4px 14px rgba(0,0,0,0.08)", fontSize: 13 }}>
       <div style={{ fontWeight: 700, marginBottom: 6 }}>{label}</div>
-      {payload.map((p, i) => (
-        <div key={i} style={{ color: p.color, marginBottom: 2 }}>{p.name}: <strong>{p.value}</strong></div>
-      ))}
+      {payload.map(function(p, i) {
+        return <div key={i} style={{ color: p.color, marginBottom: 2 }}>{p.name}: <strong>{p.value}</strong></div>;
+      })}
     </div>
   );
 };
 
 export default function Dashboard() {
+  var { selectedPond, data } = usePond();
+  var latestMetrics = data.metrics;
+  var trends = data.trends;
+  var alerts = data.alerts;
   return (
     <div>
       <header className="page-header">
         <h1 className="page-title">鱼塘数据看板</h1>
-        <p className="page-desc">聚焦溶氧、水温、pH、氨氮、水位与机器人状态，快速掌握当前鱼塘运行全貌。</p>
+        <p className="page-desc">聚焦溶氧、水温、pH、氨氮、水位与机器人状态，快速掌握 {selectedPond} 运行全貌。</p>
       </header>
       <section className="summary-grid" aria-label="核心指标">
-        {latestMetrics.map((item) => {
-          const Icon = metricIcons[item.key];
+        {latestMetrics.map(function(item) {
+          var Icon = metricIcons[item.key];
           return (
-            <div key={item.key} className={`summary-card status-${item.status}`}>
-              <div className={`summary-icon ${metricIconCls[item.key]}`} aria-hidden="true">
+            <div key={item.key} className={"summary-card status-" + item.status}>
+              <div className={"summary-icon " + metricIconCls[item.key]} aria-hidden="true">
                 <Icon size={20} strokeWidth={1.8} />
               </div>
               <div className="summary-label">{item.label}</div>
@@ -43,7 +48,7 @@ export default function Dashboard() {
                 {item.unit ? <span className="summary-unit">{item.unit}</span> : null}
               </div>
               <div className="summary-note">
-                <span className={`status-tag ${statusTag(item.status)}`}>{statusText(item.status)}</span>
+                <span className={"status-tag " + statusTag(item.status)}>{statusText(item.status)}</span>
                 <span>{item.note}</span>
               </div>
             </div>
@@ -80,15 +85,17 @@ export default function Dashboard() {
         <div className="section-card">
           <div className="section-title"><span className="section-title-icon" /> 告警与事件</div>
           <ul className="alert-list">
-            {alerts.map((item) => (
-              <li key={item.id} className="alert-item">
-                <div>
-                  <div className="alert-name">{item.pond}</div>
-                  <div className="alert-meta">{item.message} · {item.time}</div>
-                </div>
-                <span className={`status-tag ${statusTag(item.level)}`}>{statusText(item.level)}</span>
-              </li>
-            ))}
+            {alerts.map(function(item) {
+              return (
+                <li key={item.id} className="alert-item">
+                  <div>
+                    <div className="alert-name">{item.pond}</div>
+                    <div className="alert-meta">{item.message} · {item.time}</div>
+                  </div>
+                  <span className={"status-tag " + statusTag(item.level)}>{statusText(item.level)}</span>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </section>
@@ -96,12 +103,12 @@ export default function Dashboard() {
         <div className="section-card">
           <div className="section-title"><span className="section-title-icon" /> 全部指标</div>
           <ul className="meta-list">
-            {latestMetrics.map((item) => {
-              const Icon = metricIcons[item.key];
+            {latestMetrics.map(function(item) {
+              var Icon = metricIcons[item.key];
               return (
                 <li key={item.key} className="meta-chip">
                   <Icon size={14} strokeWidth={1.8} aria-hidden="true" />
-                  <strong>{item.label}</strong> {item.value}{item.unit ? ` ${item.unit}` : ""}
+                  <strong>{item.label}</strong> {item.value}{item.unit ? " " + item.unit : ""}
                 </li>
               );
             })}
